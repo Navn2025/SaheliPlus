@@ -1,0 +1,59 @@
+@import "tailwindcss";
+body {
+  margin: 0;
+  height: 100vh;
+  position: relative;
+
+  /* Base gradient background */
+  background: linear-gradient(
+    to right,
+    /* Forward 8 stripes */ #ffd9b5 0%,
+    #ffd9b5 5.88%,
+    #ffd0a8 5.88%,
+    #ffd0a8 11.76%,
+    #fbbfa2 11.76%,
+    #fbbfa2 17.64%,
+    #f7b197 17.64%,
+    #f7b197 23.52%,
+    #f8afa6 23.52%,
+    #f8afa6 29.41%,
+    #f3a29b 29.41%,
+    #f3a29b 35.29%,
+    #f6a8b1 35.29%,
+    #f6a8b1 41.17%,
+    #f6b8c6 41.17%,
+    #f6b8c6 47.05%,
+    #fbcad0 47.05%,
+    #fbcad0 52.94%,
+    #f6b8c6 52.94%,
+    #f6b8c6 58.82%,
+    #f6a8b1 58.82%,
+    #f6a8b1 64.7%,
+    #f3a29b 64.7%,
+    #f3a29b 70.58%,
+    #f8afa6 70.58%,
+    #f8afa6 76.47%,
+    #f7b197 76.47%,
+    #f7b197 82.35%,
+    #fbbfa2 82.35%,
+    #fbbfa2 88.23%,
+    #ffd0a8 88.23%,
+    #ffd0a8 94.11%,
+    #ffd9b5 94.11%,
+    #ffd9b5 100%
+  );
+}
+.image {
+  inset: 0; /* covers full body */
+  background-image: url("./assets/register.png"); /* replace with your image path */
+  background-size: cover;
+  background-position: top;
+  z-index: 0; /* behind other content */
+}
+.customer-image {
+  inset: 0; /* covers full body */
+  background-image: url("./assets/customerbg.jpg"); /* replace with your image path */
+  background-size: cover;
+  background-position: center;
+  z-index: 0; /* behind other content */
+}
