@@ -1,9 +1,12 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {CreateSaheli} from "../actions/SaheliActions";
+import {CreateSaheli, AddSaheliService, GetSaheliBookings, ApproveSaheliBooking, GetServicesRequired, BookCustomerService} from "../actions/SaheliActions";
 import {sendOtp, verifyOtp} from "../actions/CommonActions";
 
 const initialState={
     saheliData: [],   // stores all saheli records
+    services: [],     // saheli's services
+    bookings: [],     // saheli's bookings
+    servicesRequired: [], // services required by customers
     loading: false,
     error: null,
 };
@@ -15,6 +18,18 @@ const SaheliSlice=createSlice({
         setSaheliData: (state, action) =>
         {
             state.saheliData=action.payload;
+        },
+        setSaheliServices: (state, action) =>
+        {
+            state.services=action.payload;
+        },
+        setSaheliBookings: (state, action) =>
+        {
+            state.bookings=action.payload;
+        },
+        setServicesRequired: (state, action) =>
+        {
+            state.servicesRequired=action.payload;
         },
     },
     extraReducers: (builder) =>
@@ -50,7 +65,7 @@ const SaheliSlice=createSlice({
             {
                 state.loading=false;
                 // push new record into array (instead of replacing entire data)
-                state.saheliData.push(action.payload);
+
             }
             )
 
@@ -75,7 +90,6 @@ const SaheliSlice=createSlice({
             {
                 state.loading=false;
                 // push new record into array (instead of replacing entire data)
-                state.saheliData.push(action.payload);
             })
 
             // when creation fails
@@ -88,5 +102,5 @@ const SaheliSlice=createSlice({
     },
 });
 
-export const {setSaheliData}=SaheliSlice.actions;
+export const {setSaheliData, setSaheliServices, setSaheliBookings, setServicesRequired}=SaheliSlice.actions;
 export default SaheliSlice.reducer;

@@ -23,7 +23,7 @@ router.post("/sos", async (req, res) =>
 
         // 1️⃣ Send WhatsApp message with location
         const waMsg=await client.messages.create({
-            body: `🚨 SOS Alert!\nUser: ${userId}\nLocation: ${mapsLink}`,
+            body: `🚨 SOS Alert!\nUser: ${userId} is in danger \nLocation: ${mapsLink}`,
             from: "whatsapp:+14155238886", // Twilio WhatsApp sandbox
             to: recipient
         });

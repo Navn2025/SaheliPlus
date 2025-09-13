@@ -4,6 +4,8 @@ const cookieParser=require('cookie-parser');
 const cors=require('cors');
 const authRoutes=require('./router/auth.route');
 const locationRoutes=require('./router/location.routes');
+const liveLocation=require('./router/livelocation.routes')
+const safetyLocationRoute=require('./router/safety.route')
 //saheli
 const bookCustomerService=require('./router/saheli.router/bookCustomerService.route')
 const getAllServiceRequired=require('./router/saheli.router/getAllServiceRequired.route');
@@ -21,18 +23,19 @@ const app=express();
 
 // ⚡ Correct CORS setup
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: "http://localhost:5173", // your frontend
     credentials: true,
 }));
 
-
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
+app.use(express.json({limit: "50mb"}));
+app.use(express.urlencoded({limit: "50mb", extended: true}));
 app.use(cookieParser());
 
 app.use('/auth', authRoutes);
 app.use('/location', locationRoutes);
 app.use('/', sos);
+app.use('/', liveLocation)
+app.use('/api/safety-locations', safetyLocationRoute);
 //saheli
 app.use('/saheli', bookCustomerService)
 app.use('/customer', getAllServiceOffered)

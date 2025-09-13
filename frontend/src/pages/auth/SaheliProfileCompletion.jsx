@@ -89,14 +89,14 @@ const SaheliProfileRegistration=() =>
         // Dispatch with FormData
         dispatch(UpdateSaheliProfile(formData)).then((res) =>
         {
-            if (res.success)
+            if (res.error)
             {
-                toast.success("Profile updated successfully!");
-                navigate("/");
-            } else
-            {
+
                 toast.error(res.message||"Failed to update profile.");
+                return;
             }
+            toast.success("Profile updated successfully!");
+            navigate("/saheli-dashboard");
 
         }
         )

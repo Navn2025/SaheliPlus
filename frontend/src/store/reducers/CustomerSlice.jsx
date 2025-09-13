@@ -1,8 +1,10 @@
 
 import {createSlice} from "@reduxjs/toolkit";
-import {CreateCustomer, UpdateCustomerProfile} from "../actions/CustomerActions";
+import {CreateCustomer, UpdateCustomerProfile, GetAllServicesOffered, BookSaheli, AcceptOrRejectSaheli, AddServiceRequirement, GetCustomerBookings} from "../actions/CustomerActions";
 const initialState={
     customerData: [],
+    servicesOffered: [], // services offered by sahelis
+    bookings: [], // customer's bookings
     loading: false,
     error: null
 };
@@ -13,6 +15,14 @@ const CustomerSlice=createSlice({
         setCustomerData: (state, action) =>
         {
             state.customerData=action.payload;
+        },
+        setServicesOffered: (state, action) =>
+        {
+            state.servicesOffered=action.payload;
+        },
+        setCustomerBookings: (state, action) =>
+        {
+            state.bookings=action.payload;
         },
     },
     extraReducers: (builder) =>
@@ -64,5 +74,5 @@ const CustomerSlice=createSlice({
     }
 });
 
-export const {setCustomerData}=CustomerSlice.actions;
+export const {setCustomerData, setServicesOffered, setCustomerBookings}=CustomerSlice.actions;
 export default CustomerSlice.reducer;

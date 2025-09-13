@@ -1,14 +1,21 @@
+// src/redux/store.js
 import {configureStore} from '@reduxjs/toolkit'
-import SaheliSlice from "./reducers/SaheliSlice";
-import CustomerSlice from "./reducers/CustomerSlice";
-import LoginSlice from "./reducers/LoginSlice";
+import saheliReducer from "./reducers/SaheliSlice";
+import customerReducer from "./reducers/CustomerSlice";
+import authReducer from './reducers/AuthSlice'; // The new consolidated slice
+import userSlice from './reducers/UserSlice'; // The new consolidated slice
+import servicesReducer from './reducers/servicesSlice'
+import bookingsReducer from './reducers/bookingsSlice'
+
 const store=configureStore({
     reducer: {
-
-        saheli: SaheliSlice,
-        customer: CustomerSlice,
-        login: LoginSlice,
-
+        // The single 'auth' slice replaces 'login' and 'user'
+        auth: authReducer,
+        saheli: saheliReducer,
+        customer: customerReducer,
+        user: userSlice,
+        services: servicesReducer,
+        bookings: bookingsReducer
     }
 });
 

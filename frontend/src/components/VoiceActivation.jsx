@@ -1,95 +1,110 @@
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef} from "react";
 import axios from "axios";
 
-function VoiceSOSAlwaysOn() {
-  const recognitionRef = useRef(null);
-  const isRecognizing = useRef(false);
+function VoiceSOSAlwaysOn()
+{
+  const recognitionRef=useRef(null);
+  // This ref will now act as a "cooldown" flag
+  const isCoolingDown=useRef(false);
 
-  useEffect(() => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+  useEffect(() =>
+  {
+    const SpeechRecognition=
+      window.SpeechRecognition||window.webkitSpeechRecognition;
 
-    if (!SpeechRecognition) {
+    if (!SpeechRecognition)
+    {
       console.error("SpeechRecognition is not supported in this browser.");
       return;
     }
 
-    const recognition = new SpeechRecognition();
-    recognitionRef.current = recognition;
+    const recognition=new SpeechRecognition();
+    recognitionRef.current=recognition;
 
-    recognition.continuous = true;
-    recognition.interimResults = false;
-    recognition.lang = "en-US";
+    recognition.continuous=true;
+    recognition.interimResults=false;
+    recognition.lang="en-US";
 
-    const startRecognition = () => {
-      if (!isRecognizing.current) {
-        try {
-          recognition.start();
-          isRecognizing.current = true;
-          console.log("Recognition started");
-        } catch (err) {
-          console.error("Error starting recognition:", err);
-        }
-      }
+    recognition.onstart=() =>
+    {
+      console.log("🎤 Voice recognition started. Listening for SOS...");
     };
 
-    recognition.onresult = async (event) => {
-      const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
+    recognition.onresult=async (event) =>
+    {
+      const transcript=
+        event.results[event.results.length-1][0].transcript
+          .toLowerCase()
+          .trim();
 
-      if (transcript.includes("help saheli help") || transcript.includes("saheli sos")) {
-        navigator.geolocation.getCurrentPosition(async (pos) => {
-          const { latitude, longitude } = pos.coords;
-          try {
+      console.log("Heard:", transcript);
+
+      // Check for trigger phrases AND check if we are in a cooldown period
+      if (
+        !isCoolingDown.current&&
+        (transcript.includes("help saheli help")||
+          transcript.includes("saheli sos"))
+      )
+      {
+        // 1. Activate cooldown to prevent immediate re-triggers
+        isCoolingDown.current=true;
+        console.log("SOS phrase detected! 🚨 Triggering alert and starting cooldown.");
+
+        // 2. Get location and send the SOS request
+        navigator.geolocation.getCurrentPosition(async (pos) =>
+        {
+          const {latitude, longitude}=pos.coords;
+          try
+          {
             await axios.post("http://localhost:3000/sos", {
               userId: "USER123",
               lat: latitude,
               lng: longitude,
             });
-            alert("🚨 Voice SOS triggered automatically!");
-          } catch (err) {
-            console.error("Failed to send SOS:", err);
+            alert("🚨 Voice SOS triggered successfully!");
+          } catch (err)
+          {
+            console.error("Failed to send SOS request:", err);
+            alert("Could not send SOS. Please check the console for errors.");
+          } finally
+          {
+            // 3. After 30 seconds, reset the cooldown flag
+            setTimeout(() =>
+            {
+              console.log("Cooldown finished. Ready to listen for SOS again.");
+              isCoolingDown.current=false;
+            }, 30000); // 30-second cooldown
           }
         });
       }
     };
 
-    recognition.onerror = (err) => {
-      console.error("Speech error:", err);
-      isRecognizing.current = false;
-      setTimeout(startRecognition, 1000);
+    recognition.onerror=(event) =>
+    {
+      console.error("Speech recognition error:", event.error);
     };
 
-    recognition.onend = () => {
-      console.log("Recognition ended");
-      isRecognizing.current = false;
-      startRecognition();
+    recognition.onend=() =>
+    {
+      console.log("Recognition service ended, restarting...");
+      // ✅ ALWAYS RESTART: This ensures it truly runs all the time.
+      recognition.start();
     };
 
-    // Start recognition immediately
-    startRecognition();
+    // Initial start
+    recognition.start();
 
-    // Handle tab visibility changes
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        startRecognition();
-      } else {
-        recognition.stop();
+    // Cleanup
+    return () =>
+    {
+      if (recognitionRef.current)
+      {
+        recognitionRef.current.stop();
       }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      recognition.stop();
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
-  return (
-    <div>
-      <p>🎤 Voice SOS is active... Say "Help Saheli Help" or "Saheli SOS"</p>
-    </div>
-  );
+  return null;
 }
 
 export default VoiceSOSAlwaysOn;

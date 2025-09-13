@@ -2,6 +2,8 @@
 const bcrypt=require("bcryptjs");
 const OtpModel=require("../models/otp.model");
 const {sendEmail}=require("../components/email.comp");
+const saheliModel=require("../models/auth/saheli.auth");
+const customerModel=require("../models/auth/user.auth");
 
 // 📩 Send OTP
 async function sendOtpHandler(req, res)
@@ -47,6 +49,8 @@ async function verifyOtpHandler(req, res)
     try
     {
         const record=await OtpModel.findOne({email});
+        const user=await saheliModel.findOne({email})||await customerModel.findOne({email})
+        if (user) return res.status(400).json({message: "User Already Registered"});
         if (!record) return res.status(400).json({message: "No OTP found"});
 
         if (Date.now()>record.otpExpires)

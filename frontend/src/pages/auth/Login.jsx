@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {toast, ToastContainer} from 'react-toastify';
 import {LoginUser} from "../../store/actions/CommonActions";
 
 const Login=() =>
 {
+    const user=useSelector(state => state.login)
+    console.log(user)
     const navigate=useNavigate();
     const dispath=useDispatch()// Placeholder for navigation function
     const {register, handleSubmit, formState: {errors}}=useForm({
@@ -31,8 +33,9 @@ const Login=() =>
             }
 
 
-            toast.success("Login successful! Check console for data.");
-            setTimeout(() => {navigate("/");}, 1000)
+            toast.success("Login successful!.");
+
+            setTimeout(() => {navigate("/saheli-dashboard");}, 1000)
 
         })
 

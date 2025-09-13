@@ -1,19 +1,34 @@
-import React from 'react'
-import {BrowserRouter as Router} from 'react-router-dom'
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import {useDispatch, useSelector} from 'react-redux'
 
 import MainRoutes from './routes/MainRoutes'
+import Navbar from './components/Navbar'
+import {getUserDetails} from './store/actions/CommonActions'
+import {useEffect} from 'react'
 import VoiceSOSAlwaysOn from './components/VoiceActivation'
+import SaheliCirclePage from './components/SaheliCircle'
+import PoliceLocator from './components/Police'
+import SafetyMap from './components/CrowdSourceDataCollection'
 
 const App=() =>
 {
-  return (
+  const dispatch=useDispatch();
+  const user=useSelector((state) => state);
+  console.log(user);
 
+  useEffect(() =>
+  {
+    dispatch(getUserDetails());
+  }, [dispatch]);
+
+  return (
     <div>
+      <Navbar />
+      <VoiceSOSAlwaysOn />
+      {/* <SafetyMap /> */}
 
       <MainRoutes />
-      <VoiceSOSAlwaysOn />
 
       <ToastContainer
         position="top-right"
@@ -28,8 +43,7 @@ const App=() =>
         theme="light"
       />
     </div>
-
-  )
-}
+  );
+};
 
 export default App

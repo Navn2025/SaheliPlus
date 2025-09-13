@@ -52,9 +52,7 @@ async function postLoginHandler(req, res)
         return res.status(200).json({
             message: "Login successful",
             user: {
-                email: user.email,
-                name: user.name,
-                role
+                user
             }
         });
     } catch (err)
@@ -128,7 +126,7 @@ async function postSaheliRegisterHandler(req, res)
         );
 
         res.cookie("token", token);
-        return res.status(201).json({message: "Registration successful"});
+        return res.status(201).json({message: "Registration successful", newUser});
     } catch (err)
     {
         console.error("Error in postSaheliRegisterHandler:", err);
@@ -183,9 +181,10 @@ async function postSaheliProfile(req, res)
             );
             console.log("Validation result:", validation);
 
-            // if (validation !== "1") {
-            //     return res.status(400).json({ message: "ID Proof details do not match" });
-            // }
+            if (validation!=="1")
+            {
+                return res.status(400).json({message: "ID Proof details do not match"});
+            }
 
             proofUrl=await uploadImage(base64File, saheli.name+"_"+Date.now());
         }
@@ -243,13 +242,12 @@ async function postSaheliProfile(req, res)
         });
     }
 }
+async function getUser()
+{
 
 
-/**
- * --------------------
- * CUSTOMER REGISTRATION
- * --------------------
- */
+}
+
 async function postCustomerRegisterHandler(req, res)
 {
     console.log("req.body:", req.body);
@@ -288,19 +286,13 @@ async function postCustomerRegisterHandler(req, res)
         const token=jwt.sign({id: newCustomer._id, role: "customer"}, process.env.JWT_SECRET, {expiresIn: '24h'});
         res.cookie('token', token);
 
-        return res.status(201).json({message: 'Registration successful'});
+        return res.status(201).json({message: 'Registration successful', newCustomer});
     } catch (err)
     {
         console.error(err);
         return res.status(500).json({message: "Internal server error", error: err.message});
     }
 }
-
-/**
- * --------------------
- * CUSTOMER PROFILE UPDATE
- * --------------------
- */
 async function postCustomerProfile(req, res)
 {
     const customerId=req.user.id;
