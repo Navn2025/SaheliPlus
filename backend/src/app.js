@@ -23,7 +23,7 @@ const app=express();
 
 // ⚡ Correct CORS setup
 app.use(cors({
-    origin: "http://localhost:5173", // your frontend
+    origin: "https://saheliplus-3.onrender.com/",
     credentials: true,
 }));
 
