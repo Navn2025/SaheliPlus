@@ -7,9 +7,7 @@ import Navbar from './components/Navbar'
 import {getUserDetails} from './store/actions/CommonActions'
 import {useEffect} from 'react'
 import VoiceSOSAlwaysOn from './components/VoiceActivation'
-import SaheliCirclePage from './components/SaheliCircle'
-import PoliceLocator from './components/Police'
-import SafetyMap from './components/CrowdSourceDataCollection'
+
 
 const App=() =>
 {
